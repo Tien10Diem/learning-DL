@@ -2,17 +2,13 @@ import torch
 import torch.nn as nn
 
 class VGGNet(nn.Module):
-    def __init__(self, num_classes=10, numbers_blocks = [1, 2, 3, 3]):
+    def __init__(self, num_classes=10, numbers_blocks = [2, 2, 2, 3, 3]):
         super().__init__()
-        self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=1,stride = 1, padding=0),
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-        )
-        self.conv2 = self._make_stage(in_channels= 64, out_channels= 128, numbers_blocks= numbers_blocks[0])
-        self.conv3 = self._make_stage(in_channels= 128, out_channels= 256, numbers_blocks= numbers_blocks[1])
-        self.conv4 = self._make_stage(in_channels= 256, out_channels= 512, numbers_blocks= numbers_blocks[2])
-        self.conv5 = self._make_stage(in_channels= 512, out_channels= 512, numbers_blocks= numbers_blocks[3])
+        self.conv1 = self._make_stage(in_channels= 3, out_channels= 64, numbers_blocks= numbers_blocks[0])
+        self.conv2 = self._make_stage(in_channels= 64, out_channels= 128, numbers_blocks= numbers_blocks[1])
+        self.conv3 = self._make_stage(in_channels= 128, out_channels= 256, numbers_blocks= numbers_blocks[2])
+        self.conv4 = self._make_stage(in_channels= 256, out_channels= 512, numbers_blocks= numbers_blocks[3])
+        self.conv5 = self._make_stage(in_channels= 512, out_channels= 512, numbers_blocks= numbers_blocks[4])
         
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         
