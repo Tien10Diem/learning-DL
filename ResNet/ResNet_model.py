@@ -16,7 +16,7 @@ class block_ResNet(nn.Module):
             nn.BatchNorm2d(out_channels)     
         )   
         
-        self.shortcut = nn.Sequential()
+        self.shortcut = nn.Identity()
         if in_channels != out_channels or stride != 1:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_channels= in_channels,out_channels= out_channels, kernel_size=1, stride=stride, padding=0),
@@ -45,30 +45,11 @@ class MYModel(nn.Module):
         
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         
-        self.fc2 = nn.Sequential(
+        self.fc1 = nn.Sequential(
             nn.Dropout(p=0.5),
-            nn.Linear(2048, 1024),
-            nn.ReLU(),
+            nn.Linear(2048, num_classes)
         )
-        
-        self.fc3 = nn.Sequential(
-            nn.Dropout(p=0.5),
-            nn.Linear(1024, 512),
-            nn.ReLU(),
-        )
-        
-        self.fc4 = nn.Sequential(
-            nn.Dropout(p=0.5),
-            nn.Linear(512, 256),
-            nn.ReLU(),
-        )
-        
-        self.fc5 = nn.Sequential(
-            nn.Dropout(p=0.5),
-            nn.Linear(256, num_classes),
-            nn.ReLU(),
-        )
-        
+
     
     
     
@@ -91,10 +72,7 @@ class MYModel(nn.Module):
         
         x = torch.flatten(x, 1)
 
-        x = self.fc2(x)
-        x = self.fc3(x)
-        x = self.fc4(x)
-        x = self.fc5(x)
+        x = self.fc1(x)
         return x
     
 
@@ -104,3 +82,12 @@ if __name__ == "__main__":
     y = model(x)
     print(y.shape)
     print(model)
+
+    
+    # 2. Đếm số tham số (parameters)
+    # Dùng một vòng lặp, chỉ đếm các tham số cần training (requires_grad=True)
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
+    print(f"Model của bạn có tổng cộng:")
+    # Dùng {:,} để format số cho dễ đọc (ví dụ: 30,461,322)
+    print(f"{total_params:,} tham số (parameters).")
