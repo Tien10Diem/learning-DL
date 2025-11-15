@@ -1,6 +1,7 @@
 from dataset import myDataset
 from model import simpleCNN
 import os
+from ResNet_model import MYModel
 import torch
 from sklearn.metrics import classification_report
 from torchvision import transforms
@@ -13,8 +14,8 @@ from torchvision.transforms import ToTensor
 
 def get_args():
     arg = argparse.ArgumentParser()
-    arg.add_argument('--batch-size','-b', type=int, default=50, help='Batch size for training and testing')
-    arg.add_argument('--epochs','-e', type=int, default=10, help='Number of training epochs')
+    arg.add_argument('--batch-size','-b', type=int, default=70, help='Batch size for training and testing')
+    arg.add_argument('--epochs','-e', type=int, default=100, help='Number of training epochs')
     arg.add_argument('--size','-s', type=int, default=224, help='Image size (height and width)')
     arg.add_argument('--logging','-l', type = str, default = r'C:\Users\ASUS\Hoc_DL\learning-DL\ResNet\tensorboard', help = 'Tensorboard logging directory')
     arg.add_argument('--model', '-m', type = str, default = r'C:\Users\ASUS\Hoc_DL\learning-DL\ResNet\checkpoints', help = 'Model to train')
@@ -84,6 +85,7 @@ if __name__ == "__main__":
     )
     
     model = simpleCNN()
+    # model = MYModel(num_classes=10) crash when train with ResNet_model
     
     if torch.cuda.is_available():
         print("Using GPU")
